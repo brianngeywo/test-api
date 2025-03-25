@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+
+// Represents a food place (e.g., a restaurant or cafe)
+model FoodPlace {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  location    String
+  menu        Menu[]   // A food place can have multiple menus (e.g., breakfast, lunch)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Represents a menu for a food place (e.g., breakfast menu, lunch menu)
+model Menu {
+  id          Int      @id @default(autoincrement())
+  name        String   // e.g., "Breakfast Menu", "Lunch Menu"
+  foodPlaceId Int      // Foreign key to FoodPlace
+  foodPlace   FoodPlace @relation(fields: [foodPlaceId], references: [id])
+  items       FoodItem[] // A menu can have multiple food items
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Represents a food item in a menu
+model FoodItem {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  isAvailable Boolean  @default(true) // Whether the item is currently available
+  readyInMins Int?     // Time (in minutes) until the item is ready (if not available)
+  menuId      Int      // Foreign key to Menu
+  menu        Menu     @relation(fields: [menuId], references: [id])
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
