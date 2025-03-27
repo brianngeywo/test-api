@@ -16,6 +16,7 @@ model FoodPlace {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   description String?
+  image      String?  // URL to an image of the food place
   location    String
   menu        Menu[]   // A food place can have multiple menus (e.g., breakfast, lunch)
   createdAt   DateTime @default(now())
@@ -26,6 +27,7 @@ model FoodPlace {
 model Menu {
   id          Int      @id @default(autoincrement())
   name        String   // e.g., "Breakfast Menu", "Lunch Menu"
+  image       String?  // URL to an image of the menu
   foodPlaceId Int      // Foreign key to FoodPlace
   foodPlace   FoodPlace @relation(fields: [foodPlaceId], references: [id])
   items       FoodItem[] // A menu can have multiple food items
@@ -38,6 +40,7 @@ model FoodItem {
   id          Int      @id @default(autoincrement())
   name        String
   description String?
+  image       String?  // URL to an image of the food item
   price       Float
   isAvailable Boolean  @default(true) // Whether the item is currently available
   readyInMins Int?     // Time (in minutes) until the item is ready (if not available)
